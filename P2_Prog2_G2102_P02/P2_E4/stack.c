@@ -47,6 +47,11 @@ Stack * stack_push(Stack *s, const void *e) {
         return NULL;
     }
     
+    if(stack_isFull(s)==TRUE){
+        fprintf(stderr, "stack_push: Stack is already full.\n");
+        return NULL;
+    }
+    
     element = s->copy_element_function(e);
 
     if (!element) {
