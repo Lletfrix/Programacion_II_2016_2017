@@ -6,7 +6,7 @@
 
 /* 
  * File:   p3_e1.c
- * Author: rafael
+ * Author: rafael, sergio
  *
  * Created on 21 de marzo de 2017, 12:36
  */
@@ -99,9 +99,20 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
     q1 = queue_ini(&destroy_node_function, &copy_node_function, &print_node_function);
+    if (!q1) {
+        return EXIT_FAILURE;
+    }
     q2 = queue_ini(&destroy_node_function, &copy_node_function, &print_node_function);
+    if (!q2) {
+        queue_destroy(q1);
+        return EXIT_FAILURE;
+    }
     q3 = queue_ini(&destroy_node_function, &copy_node_function, &print_node_function);
-
+    if (!q3) {
+        queue_destroy(q1);
+        queue_destroy(q2);
+        return EXIT_FAILURE;
+    }
     fprintf(f, "Cola 1: ");
     queue_print_status(f, q1);
     fprintf(f, "Cola 2: ");
@@ -111,10 +122,22 @@ int main(int argc, char** argv) {
     fprintf(f, "\n");
 
     qAux = read_queue_from_file(argv[1]);
+    if (!qAux) {
+        queue_destroy(q1);
+        queue_destroy(q2);
+        queue_destroy(q3);
+        return EXIT_FAILURE;
+    }
 
     while (!queue_isEmpty(qAux)) {
         eleAux = queue_extract(qAux);
         q1 = queue_insert(q1, eleAux);
+        if (!q1) {
+            queue_destroy(q2);
+            queue_destroy(q3);
+            queue_destroy(qAux);
+            return EXIT_FAILURE;
+        }
         node_destroy((Node*) eleAux);
 
         fprintf(f, "Cola 1: ");
@@ -132,6 +155,14 @@ int main(int argc, char** argv) {
     for (i = 0; i < (qSize / 2); i++) {
         eleAux = queue_extract(q1);
         q2 = queue_insert(q2, eleAux);
+
+        if (!q2) {
+            queue_destroy(q1);
+            queue_destroy(q3);
+            queue_destroy(qAux);
+            return EXIT_FAILURE;
+        }
+
         node_destroy((Node*) eleAux);
         fprintf(f, "Cola 1: ");
         queue_print_status(f, q1);
@@ -148,6 +179,14 @@ int main(int argc, char** argv) {
     while (!queue_isEmpty(q1)) {
         eleAux = queue_extract(q1);
         q3 = queue_insert(q3, eleAux);
+
+        if (!q3) {
+            queue_destroy(q1);
+            queue_destroy(q2);
+            queue_destroy(qAux);
+            return EXIT_FAILURE;
+        }
+
         node_destroy((Node*) eleAux);
 
         fprintf(f, "Cola 1: ");
@@ -158,7 +197,7 @@ int main(int argc, char** argv) {
         queue_print_status(f, q3);
         fprintf(f, "\n");
     }
-    
+
     queue_destroy(q1);
     queue_destroy(q2);
     queue_destroy(q3);

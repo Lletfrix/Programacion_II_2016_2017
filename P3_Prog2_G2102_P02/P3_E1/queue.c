@@ -86,11 +86,13 @@ Queue* queue_insert(Queue *q, const void* pElem) {
     }
     if (queue_isFull(q)) {
         fprintf(stderr, "queue_insert: queue is already full");
+        queue_destroy(q);
         return NULL;
     }
     *(q->rear) = q->copy_element_function(pElem);
     if (!(*(q->rear))) {
         fprintf(stderr, "queue_insert: error copying element");
+        queue_destroy(q);
         return NULL;
     }
     if (q->rear != q->item[MAXQUEUE - 1]) {
@@ -111,6 +113,7 @@ void * queue_extract(Queue *q){
   }
   if (queue_isEmpty(q)){
     fprintf(stderr, "queue_extract: queue is already empty");
+    queue_destroy(q);
     return NULL;
   }
   ele = q->front;
