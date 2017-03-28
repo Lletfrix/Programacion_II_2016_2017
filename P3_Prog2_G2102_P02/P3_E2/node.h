@@ -22,7 +22,7 @@ char* node_getName(const Node * n);
 /* Devuelve el color de un nodo dado, BLACK si se produce algun error */
 Color node_getColor (const Node *n);
 /* Devuelve el id del padre de un nodo dado, o -1 si se produce algún error */
-int node_getFatherId(Node*, int);
+int node_getFatherId(Node*);
 
 /* Modifica el id de un nodo dado, devuelve NULL si se produce algún error */
 Node * node_setId(Node * n, const int id);

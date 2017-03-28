@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include "graph.h"
 #include "queue.h"
+#include "functions.h"
 
 #define MAX 255
 /*
@@ -84,10 +85,98 @@ Graph * read_graph_from_file(char * filename) {
     return g;
 }
 
+Queue* graph_path (Graph*g, int fromId, int toId ){
+    int i, *idList, *idAdj, nConnec;
+    Queue* qAux, *qPath;
+    Node* nodeU, *nodeV;
+    
+    if(!g || fromId==-1 || toId==-1){
+        return NULL;
+    }
+    
+    idList=graph_getNodeIds(g);
+    if(!idList){
+        return NULL;
+    }
+    for(i=0;i<graph_getNnodes(g);i++){
+        nodeU=graph_getNode(g,idList[i]);
+        node_setColor(nodeU,WHITE);
+        node_setFatherId(nodeU,0);
+    }
+    free(idList);
+    
+    nodeU=graph_getNode(g, fromId);
+    node_setColor(nodeU,GREY);
+    qAux=queue_ini(&destroy_node_function,&copy_node_function,&print_node_function);
+    
+    if(!qAux){
+        return NULL;
+    }
+    
+    qAux=queue_insert(qAux,nodeU);
+    if(!qAux){
+        fprintf(stderr, "graph_path: error adding first node to queue.\n");
+        return NULL;
+    }
+    
+    while(!queue_isEmpty(qAux)){
+        nodeU=queue_extract(qAux);
+        idAdj=graph_getConnectionsFrom(g, node_getId(nodeU));
+        if(!idAdj){
+            queue_destroy(qAux);
+            return NULL;
+        }
+        nConnec=graph_getNumberOfConnectionsFrom(g, node_getId(nodeU));
+        for(i=0; i<nConnec; i++){
+            nodeV=graph_getNode(g, idAdj[i]);
+            if(node_getColor(nodeV)==WHITE){
+                node_setColor(nodeV,GREY);
+                node_setFatherId(nodeV, node_getId(nodeU));
+                qAux=queue_insert(qAux, nodeV);
+                if(!qAux){
+                    free(idAdj);
+                    return NULL;
+                }
+            }
+        }
+        node_setColor(nodeU,BLACK);
+        free(idAdj);
+    }
+    
+    queue_destroy(qAux);
+    
+    if (node_getColor(graph_getNode(g, toId))!=BLACK){
+        return NULL;
+    }
+    
+    /* Backtracking */
+    qPath=queue_ini(&destroy_node_function,&copy_node_function,&print_node_function);
+    if(!qPath){
+        fprintf(stderr, "graph_path: error allocating qPath memory.\n");
+        return NULL;
+    }
+    
+    nodeU=graph_getNode(g, toId);
+    qPath=queue_insert(qPath, nodeU);
+    
+    if(!qPath){
+        return NULL;
+    }
+    
+    while(node_getFatherId(nodeU)!=0){
+        nodeU=graph_getNode(g, node_getFatherId(nodeU));
+        qPath = queue_insert(qPath, nodeU);
+        if (!qPath) {
+            return NULL;
+        }
+    }
+    
+    return qPath;
+}
+
 int main(int argc, char** argv) {
     int  fromId, toId;
     Graph* g;
-    Bool pth;
     Queue* qPath;
     FILE* fp;
     fp = stdout;
@@ -103,8 +192,6 @@ int main(int argc, char** argv) {
         printf("Error reading graph from file %s\n", argv[1]);
         return EXIT_FAILURE;
     }
-    
-    
     
     qPath = graph_path(g, fromId, toId);
     

@@ -18,6 +18,7 @@ Node * node_ini() {
         return NULL;
     }
     n->color = WHITE;
+    n->fatherId=0;
     return n;
 }
 
@@ -52,7 +53,7 @@ Color node_getColor (const Node*n){
     return n->color;
 }
 
-int node_getFatherId(Node*n, int fatherId){
+int node_getFatherId(Node*n){
     if(!n){
         return -1;
     }
