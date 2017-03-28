@@ -6,6 +6,7 @@
 struct _Node {
     char name[100];
     int id;
+    int fatherId;
     Color color;
 };
 
@@ -51,6 +52,13 @@ Color node_getColor (const Node*n){
     return n->color;
 }
 
+int node_getFatherId(Node*n, int fatherId){
+    if(!n){
+        return -1;
+    }
+    return n->fatherId;
+}
+
 Node* node_setId(Node* n, const int id) {
     if (!n) {
         /*if n is null return NULL*/
@@ -77,6 +85,14 @@ Node* node_setColor (Node* n, const Color color){
     return n;
 }
 
+Node* node_setFatherId(Node* n, int fatherId){
+    if(!n){
+        return NULL;
+    }
+    n->fatherId=fatherId;
+    return n;
+}
+
 Bool node_equals(const Node * n1, const Node * n2) {
     /* if id and name from n1 is equal to those from n2 return true, if not return false*/
     if ((n1->id == n2->id) && (n1->color == n2->color) && (strcmp(n1->name, n2->name) == 0)) {
@@ -85,7 +101,7 @@ Bool node_equals(const Node * n1, const Node * n2) {
     return FALSE;
 }
 
-Node * node_copy(const Node * src) {
+Node* node_copy(const Node * src) {
     Node *temp;
     if (!src) {
         

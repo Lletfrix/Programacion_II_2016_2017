@@ -31,3 +31,5 @@
 # Debug files
 *.dSYM/
 *.su
+/P3_Prog2_G2102_P02/P3_E2/build/
+/P3_Prog2_G2102_P02/P3_E2/dist/

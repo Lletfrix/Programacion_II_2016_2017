@@ -21,6 +21,8 @@ int node_getId(const Node * n);
 char* node_getName(const Node * n);
 /* Devuelve el color de un nodo dado, BLACK si se produce algun error */
 Color node_getColor (const Node *n);
+/* Devuelve el id del padre de un nodo dado, o -1 si se produce algún error */
+int node_getFatherId(Node*, int);
 
 /* Modifica el id de un nodo dado, devuelve NULL si se produce algún error */
 Node * node_setId(Node * n, const int id);
@@ -28,6 +30,8 @@ Node * node_setId(Node * n, const int id);
 Node * node_setName(Node * n, const char* name);
 /* Modifica el color de un nodo dado, devuelve NULL si se produce algún error */
 Node * node_setColor(Node * n, const Color color);
+/* Modifica el padre de un nodo dado, devuelve NULL si se produce algún error*/
+Node* node_setFatherId(Node*, int);
 
 /* Devuelve TRUE si los dos nodos pasados como argumento son iguales (revisando todos sus campos).
  Devuelve FALSE en otro caso. */
