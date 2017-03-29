@@ -251,11 +251,6 @@ int* graph_getConnectionsFrom(const Graph * g, const int fromId) {
              array index increases*/
         }
     }
-    if (j == 0) {
-        free(temp);
-        /* if the list is empty, free temp and return NULL*/
-        return NULL;
-    }
     return temp;
 }
 

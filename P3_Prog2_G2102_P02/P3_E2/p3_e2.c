@@ -140,7 +140,9 @@ Queue* graph_path (Graph*g, int fromId, int toId ){
             }
         }
         node_setColor(nodeU,BLACK);
+        node_setColor(graph_getNode(g, node_getId(nodeU)), BLACK);
         free(idAdj);
+        node_destroy(nodeU);
     }
     
     queue_destroy(qAux);
@@ -203,7 +205,6 @@ int main(int argc, char** argv) {
     }
     
     queue_print(fp, qPath);
-
     queue_destroy(qPath);
     graph_destroy(g);
     return (EXIT_SUCCESS);
