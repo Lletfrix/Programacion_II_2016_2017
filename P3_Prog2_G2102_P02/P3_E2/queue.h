@@ -13,7 +13,7 @@
 
 #ifndef QUEUE_H
 #define QUEUE_H
-#define MAXQUEUE 100
+#define MAXQUEUE 150
 
 #include <stdio.h>
 #include <stdlib.h>
