@@ -52,7 +52,23 @@ Bool list_isEmpty(const List* list){
 }
 /* Devuelve el elemento i-ésimo almacenado en la lista. En caso de error, devuelve NULL. */
 const void* list_get(const List* list, int i){
-
+    int count;
+    void *eleAux;
+    NodeList *nodeAux;
+    if (list == NULL){
+        fprintf("list_get: invalid arguments.\n");
+        return NULL;
+    }
+    nodeAux = list->node;
+    for (count = 1; count <= i; count++){
+        nodeAux = nodeAux->next;
+    }
+    eleAux = list->copy_element_function(nodeAux->data);
+    if (!eleAux){
+        fprintf("list_get: error copying.\n");
+        return NULL;
+    }
+    return eleAux;
 }
 /* Devuelve el tamaño de una lista. */
 int list_size(const List* list){
