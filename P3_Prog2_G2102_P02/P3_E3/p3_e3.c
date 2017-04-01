@@ -21,8 +21,12 @@
  */
 int main(int argc, char** argv) {
     List* l;
-    l=list_ini(&destroy_node_function,&copy_node_function,&print_node_function,
-            &cmp_node_function);
+    int *pe, entero=4;
+    pe=&entero;
+
+    l=list_ini(&destroy_intp_function,&copy_intp_function,&print_intp_function,
+            &cmp_intp_function);
+    list_insertFirst(l, pe);
     list_destroy(l);
     return (EXIT_SUCCESS);
 }
