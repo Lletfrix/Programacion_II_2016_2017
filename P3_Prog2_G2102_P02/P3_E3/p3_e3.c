@@ -26,13 +26,8 @@ int main(int argc, char** argv) {
     l=list_ini(&destroy_intp_function,&copy_intp_function,&print_intp_function,
             &cmp_intp_function);
     
-    for(i=10;i>0;i--){
-        entero=i;
-        pe=&entero;
-        list_insertFirst(l,pe);
-    }
+    if(list_isEmpty(l)==TRUE) printf("WIN!\n");
     
-    list_print(stdout, l);
     list_destroy(l);
     return (EXIT_SUCCESS);
 }
