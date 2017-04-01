@@ -21,12 +21,18 @@
  */
 int main(int argc, char** argv) {
     List* l;
-    int *pe, entero, i;
+    int *pe, i;
 
     l=list_ini(&destroy_intp_function,&copy_intp_function,&print_intp_function,
             &cmp_intp_function);
     
     if(list_isEmpty(l)==TRUE) printf("WIN!\n");
+    
+    for(i=0;i<10;i=2*i){
+        pe=&i;
+        list_insertInOrder(l, pe);
+    }
+    list_print(stdout,l);
     
     list_destroy(l);
     return (EXIT_SUCCESS);

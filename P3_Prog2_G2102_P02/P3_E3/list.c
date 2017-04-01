@@ -26,10 +26,10 @@ struct _List {
     cmp_elementlist_function_type cmp_element_function;
 };
 
-NodeList* element_ini(){
+NodeList* element_ini() {
     NodeList* n;
-    n=(NodeList*)calloc(1,sizeof(NodeList));
-    if(!n){
+    n = (NodeList*) calloc(1, sizeof (NodeList));
+    if (!n) {
         fprintf(stderr, "element_ini: error allocating memory.\n");
         return NULL;
     }
@@ -37,25 +37,25 @@ NodeList* element_ini(){
 }
 
 List* list_ini(destroy_elementlist_function_type f1, copy_elementlist_function_type f2,
-print_elementlist_function_type f3, cmp_elementlist_function_type f4){
-    List* l=NULL;
-    l=(List*)calloc(1,sizeof(List));
-    if(!l){
+        print_elementlist_function_type f3, cmp_elementlist_function_type f4) {
+    List* l = NULL;
+    l = (List*) calloc(1, sizeof (List));
+    if (!l) {
         fprintf(stderr, "list_ini: error allocating memory.\n");
         return NULL;
     }
 
-   /* l->node=element_ini();
-    if(!l->node){
-        fprintf(stderr, "list_ini: error allocating memory.\n");
-        free(l);
-        return NULL;
-    }*/
+    /* l->node=element_ini();
+     if(!l->node){
+         fprintf(stderr, "list_ini: error allocating memory.\n");
+         free(l);
+         return NULL;
+     }*/
 
-    l->destroy_element_function=f1;
-    l->copy_element_function=f2;
-    l->print_element_function=f3;
-    l->cmp_element_function=f4;
+    l->destroy_element_function = f1;
+    l->copy_element_function = f2;
+    l->print_element_function = f3;
+    l->cmp_element_function = f4;
 
     return l;
 }
@@ -79,110 +79,117 @@ void list_destroy(List* list) {
     free(list);
 }
 
-List* list_insertFirst(List* list, const void *elem){
+List* list_insertFirst(List* list, const void *elem) {
     NodeList *nodeAux;
-    if (!list || !elem){
+    if (!list || !elem) {
         fprintf(stderr, "list_insertFirst: invalid arguments.\n");
         list_destroy(list);
         return NULL;
     }
-    
-    nodeAux=element_ini();
-    if(!nodeAux){
+
+    nodeAux = element_ini();
+    if (!nodeAux) {
         fprintf(stderr, "list_insertFirst: error allocating memory\n");
         list_destroy(list);
         return NULL;
     }
-    nodeAux->next=list->node;
-    nodeAux->data=list->copy_element_function(elem);
-    if (!nodeAux->data){
-        fprintf(stderr,"list_insertFirst: error copying node\n");
+    nodeAux->next = list->node;
+    nodeAux->data = list->copy_element_function(elem);
+    if (!nodeAux->data) {
+        fprintf(stderr, "list_insertFirst: error copying node\n");
         free(nodeAux);
         list_destroy(list);
         return NULL;
     }
-    list->node=nodeAux;
+    list->node = nodeAux;
 
     return list;
 }
 
-List* list_insertLast(List* list, const void *elem){
+List* list_insertLast(List* list, const void *elem) {
     NodeList *nodeAdv, *nodeAux;
-    if(!list || !elem){
+    if (!list || !elem) {
         fprintf(stderr, "list_insertLast: invalid arguments.\n");
         list_destroy(list);
         return NULL;
     }
-    
-    nodeAdv=list->node;
 
-    /* advance the list till the first node is the last one */
-    if(!nodeAdv){
-    while(nodeAdv->next){
-        nodeAdv=nodeAdv->next;
-        }
+    nodeAdv = list->node;
+
+    if (!nodeAdv) {
+        list_insertFirst(list, elem);
+        return list;
     }
+    /* advance the list till the first node is the last one */
+    while (nodeAdv->next) {
+        nodeAdv = nodeAdv->next;
+    }
+
     /* creation of the node to insert */
-    nodeAux=element_ini();
-    if(!nodeAux){
+    nodeAux = element_ini();
+    if (!nodeAux) {
         fprintf(stderr, "list_insertLast: error allocating memory.\n");
         list_destroy(list);
         return NULL;
     }
-    nodeAux->data=list->copy_element_function(elem);
-    if (!nodeAux->data){
-        fprintf(stderr,"list_insertLast: error copying node\n");
+    nodeAux->data = list->copy_element_function(elem);
+    if (!nodeAux->data) {
+        fprintf(stderr, "list_insertLast: error copying node\n");
         free(nodeAux);
         list_destroy(list);
         return NULL;
     }
-    nodeAux->next=NULL;
-    nodeAdv->next=nodeAux;
+    nodeAux->next = NULL;
+    nodeAdv->next = nodeAux;
 
-    /* first node come back */
 
     return list;
 }
 
-
-List* list_insertInOrder(List* list,const void* pElem){
-    NodeList* nodeAdv, *nodeNext;
-    if(!list || !pElem){
+List* list_insertInOrder(List* list, const void* pElem) {
+    NodeList* nodeAdv, *nodeAux;
+    if (!list || !pElem) {
         fprintf(stderr, "list_insertInOrder: invalid arguments");
         list_destroy(list);
         return NULL;
     }
-    nodeAdv=list->node;
-    while(list->cmp_element_function(list->node->data, pElem)>=0){
-        nodeAdv=nodeAdv->next;
+    nodeAdv = list->node;
+    if (!nodeAdv) {
+        list_insertFirst(list, pElem);
+        return list;
     }
-    nodeNext=nodeAdv->next;
-    nodeAdv->data=list->copy_element_function(pElem);
-    if(!nodeAdv->data){
-        fprintf(stderr, "list_insertInOrder: error copying node");
-        list_destroy(list);
-        return NULL;
+    while ((list->cmp_element_function(nodeAdv->data, pElem) <= 0 )&& (nodeAdv->next)) {
+        nodeAdv = nodeAdv->next;
     }
-    nodeAdv->next=nodeNext;
+    if(!nodeAdv->next){
+        list_insertLast(list, pElem);
+        return list;
+    }
+    nodeAux = element_ini();
+    nodeAux->data = list->copy_element_function(pElem);
+    nodeAux->next = nodeAdv->next;
+    nodeAdv->next = nodeAux;
+
+
     return list;
 }
 
-void * list_extractFirst(List* list){
+void * list_extractFirst(List* list) {
     NodeList* nodeAux;
     void* returnElement;
-    if(!list){
+    if (!list) {
         fprintf(stderr, "list_extractFirst: invalid arguments");
         return NULL;
     }
-    nodeAux=list->node;
-    list->node=list->node->next;
-    returnElement=list->copy_element_function(nodeAux->data);
+    nodeAux = list->node;
+    list->node = list->node->next;
+    returnElement = list->copy_element_function(nodeAux->data);
     list->destroy_element_function(nodeAux->data);
     free(nodeAux);
     return list;
 }
 
-void * list_extractLast(List* list){
+void * list_extractLast(List* list) {
     void * nodeAux;
     NodeList * nodeFirst;
     if (!list) {
@@ -190,61 +197,66 @@ void * list_extractLast(List* list){
         return NULL;
     }
     nodeFirst = list -> node;
-    while(list->node->next->next){
-        list->node=list->node->next;
+    while (list->node->next->next) {
+        list->node = list->node->next;
     }
     nodeAux = list->copy_element_function(list->node->next->data);
-    if (!nodeAux){
+    if (!nodeAux) {
         fprintf(stderr, "list_extractLast: error copying.\n");
         return NULL;
     }
     list->node = nodeFirst;
     return nodeAux;
 }
-Bool list_isEmpty(const List* list){
-    if (!list){
+
+Bool list_isEmpty(const List* list) {
+    if (!list) {
         return TRUE;
     }
-    if(!list->node){
+    if (!list->node) {
         return TRUE;
     }
     return FALSE;
 }
+
 /* Devuelve el elemento i-ésimo almacenado en la lista. En caso de error, devuelve NULL. */
-const void* list_get(const List* list, int i){
+const void* list_get(const List* list, int i) {
 
 }
+
 /* Devuelve el tamaño de una lista. */
-int list_size(const List* list){
+int list_size(const List* list) {
     int aux = 0;
     NodeList *nodeAux;
-    if (!list){
+    if (!list) {
         fprintf(stderr, "list_size: invalid arguments.\n");
         return -1;
     }
-    if (list->node == NULL){
+    if (list->node == NULL) {
         return 0;
     }
     nodeAux = list->node;
-    while(nodeAux->next){
-        nodeAux=nodeAux->next;
+    while (nodeAux->next) {
+        nodeAux = nodeAux->next;
         aux++;
     }
     return aux;
 }
 
-int list_print(FILE *fd, const List* list){
-    int chars=0;
+int list_print(FILE *fd, const List* list) {
+    int chars = 0;
     NodeList* nodeFirst;
-    if(!fd || !list){
+    if (!fd || !list) {
         fprintf(stderr, "list_print: invalid arguments\n");
         return -1;
     }
-    nodeFirst=list->node;
-    while(nodeFirst->next){
-        chars=list->print_element_function(fd,list->node->data);
-        chars=fprintf(fd,"\n");
-        nodeFirst=nodeFirst->next;
+    nodeFirst = list->node;
+    while (nodeFirst->next) {
+        chars = list->print_element_function(fd, nodeFirst->data);
+        chars = fprintf(fd, "\n");
+        nodeFirst = nodeFirst->next;
     }
+    chars = list->print_element_function(fd, nodeFirst->data);
+    chars = fprintf(fd, "\n");
     return chars;
 }
