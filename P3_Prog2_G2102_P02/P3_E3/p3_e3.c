@@ -28,10 +28,15 @@ int main(int argc, char** argv) {
     
     if(list_isEmpty(l)==TRUE) printf("WIN!\n");
     
-    for(i=0;i<10;i=2*i){
+    for(i=0;i<10;i=i+2){
         pe=&i;
         list_insertInOrder(l, pe);
     }
+    
+   /* for(i=1;i<10;i=2+i){
+        pe=&i;
+        list_insertInOrder(l, pe);
+    }*/
     list_print(stdout,l);
     
     list_destroy(l);

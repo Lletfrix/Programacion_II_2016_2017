@@ -36,14 +36,15 @@ int print_intp_function(FILE * f, const void* e) {
 }
 
 int cmp_intp_function(const void* e1, const void* e2){
-    int i1, i2;
+    int *i1, *i2, retorno;
     if (!e1 || !e2){
         fprintf(stderr,"cpm_intp_function: invalid arguments");
         return 0;
     }
-    i1=*(int*)e1;
-    i2=*(int*)e2;
-    return (i1-i2);
+    i1=(int*)e1;
+    i2=(int*)e2;
+    retorno=(*i1)-(*i2);
+    return retorno;
 }
 
 /* Las siguientes se usarán cuando se quieran guardar nodos en la pila */

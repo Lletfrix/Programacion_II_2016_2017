@@ -148,23 +148,34 @@ List* list_insertLast(List* list, const void *elem) {
 
 List* list_insertInOrder(List* list, const void* pElem) {
     NodeList* nodeAdv, *nodeAux;
+    int size, i;
+
     if (!list || !pElem) {
         fprintf(stderr, "list_insertInOrder: invalid arguments");
         list_destroy(list);
         return NULL;
     }
     nodeAdv = list->node;
+
+    size = list_size(list);
+
     if (!nodeAdv) {
         list_insertFirst(list, pElem);
         return list;
     }
-    while ((list->cmp_element_function(nodeAdv->data, pElem) <= 0 )&& (nodeAdv->next)) {
-        nodeAdv = nodeAdv->next;
-    }
-    if(!nodeAdv->next){
-        list_insertLast(list, pElem);
+
+    if (list->cmp_element_function(nodeAdv->data, pElem) > 0) {
+        list_insertFirst(list, pElem);
         return list;
     }
+
+    for (nodeAdv = list->node; i < size; i++, nodeAdv = nodeAdv->next) {
+        if (list->cmp_element_function(nodeAdv->next->data, pElem) <= 0) {
+            continue;
+        }
+        break;
+    }
+
     nodeAux = element_ini();
     nodeAux->data = list->copy_element_function(pElem);
     nodeAux->next = nodeAdv->next;
@@ -226,7 +237,7 @@ const void* list_get(const List* list, int i) {
 
 /* Devuelve el tamaño de una lista. */
 int list_size(const List* list) {
-    int aux = 0;
+    int aux = 1;
     NodeList *nodeAux;
     if (!list) {
         fprintf(stderr, "list_size: invalid arguments.\n");
