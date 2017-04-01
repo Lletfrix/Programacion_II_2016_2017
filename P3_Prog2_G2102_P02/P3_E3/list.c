@@ -221,11 +221,10 @@ int list_size(const List* list){
         return 0;
     }
     nodeAux = list->node;
-    while(list->node->next){
-        list->node=list->node->next;
+    while(nodeAux->next){
+        nodeAux=nodeAux->next;
         aux++;
     }
-    list->node = nodeAux;
     return aux;
 }
 
