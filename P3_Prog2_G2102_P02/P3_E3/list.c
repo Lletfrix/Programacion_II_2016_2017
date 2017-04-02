@@ -147,42 +147,35 @@ List* list_insertLast(List* list, const void *elem) {
 }
 
 List* list_insertInOrder(List* list, const void* pElem) {
-    NodeList* nodeAdv, *nodeAux;
-    int size, i;
-
-    if (!list || !pElem) {
-        fprintf(stderr, "list_insertInOrder: invalid arguments");
-        list_destroy(list);
-        return NULL;
-    }
-    nodeAdv = list->node;
-
-    size = list_size(list);
-
-    if (!nodeAdv) {
+    NodeList *node1, *node2, *nodeAux;
+    node2 = list->node;
+    if (!node2) {
         list_insertFirst(list, pElem);
         return list;
     }
-
-    if (list->cmp_element_function(nodeAdv->data, pElem) > 0) {
+    if (list->cmp_element_function(node2->data, pElem) > 0) {
         list_insertFirst(list, pElem);
         return list;
     }
-
-    for (nodeAdv = list->node; i < size; i++, nodeAdv = nodeAdv->next) {
-        if (list->cmp_element_function(nodeAdv->next->data, pElem) <= 0) {
-            continue;
+    node1 = list->node->next;
+    while (1) {
+        if (!node1) {
+            nodeAux = element_ini();
+            nodeAux->data = list->copy_element_function(pElem);
+            nodeAux->next = node1;
+            node2->next = nodeAux;
+            return list;
         }
-        break;
+        if (list->cmp_element_function(node1->data, pElem) > 0) {
+            nodeAux = element_ini();
+            nodeAux->data = list->copy_element_function(pElem);
+            nodeAux->next = node1;
+            node2->next = nodeAux;
+            return list;
+        }
+        node2 = node1;
+        node1 = node1->next;
     }
-
-    nodeAux = element_ini();
-    nodeAux->data = list->copy_element_function(pElem);
-    nodeAux->next = nodeAdv->next;
-    nodeAdv->next = nodeAux;
-
-
-    return list;
 }
 
 void * list_extractFirst(List* list) {
