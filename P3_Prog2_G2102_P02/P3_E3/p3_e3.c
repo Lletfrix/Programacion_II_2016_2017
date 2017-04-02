@@ -16,30 +16,126 @@
 #include "list.h"
 #include "functions.h"
 
+#define MAX 255
+
 /*
  * 
  */
-int main(int argc, char** argv) {
-    List* l;
-    int *pe, i;
+void print_status(FILE *pf, List* list){
+    int size;
+    if (!list){
+        return;
+    }
+    size=list_size(list);
+    fprintf(pf, "Lista con %d elementos:\n",size);
+    list_print(pf,list);
+}
 
-    l=list_ini(&destroy_intp_function,&copy_intp_function,&print_intp_function,
-            &cmp_intp_function);
+int main(int argc, char** argv) {
+    FILE *in=NULL, *f=stdout;
+    List *mixList, *orderedList;
+    char buff[MAX];
+    int number, size,i, *element;
     
-    if(list_isEmpty(l)==TRUE) printf("WIN!\n");
-    
-    for(i=0;i<10;i=i+2){
-        pe=&i;
-        list_insertInOrder(l, pe);
+    if(argc<2){
+        fprintf(stderr, "main: invalid number of arguments.\n");
+        return (EXIT_FAILURE);
     }
     
-   for(i=1;i<10;i=2+i){
-        pe=&i;
-        list_insertInOrder(l, pe);
+    in=fopen(argv[1], "r");
+    if(!in){
+        fprintf(stderr, "main: error opening file.\n");
+        return (EXIT_FAILURE);
     }
-    list_print(stdout,l);
     
-    list_destroy(l);
+    mixList=list_ini(&destroy_intp_function, &copy_intp_function,
+            &print_intp_function, &cmp_intp_function);
+    
+    if(!mixList){
+        fclose(in);
+        fprintf(stderr, "main: error creating list");
+        return (EXIT_FAILURE);
+    }
+    
+    while (!feof(in)) {
+        fgets(buff, MAX, in);
+        number = atoi(buff);
+        if (number % 2 == 0) {
+            mixList = list_insertFirst(mixList, &number);
+            if(!mixList){
+                fclose(in);
+                fprintf(stderr, "main: error inserting even number");
+                return (EXIT_FAILURE);
+            }
+        } else {
+            mixList = list_insertLast(mixList, &number);
+            if(!mixList){
+                fclose(in);
+                fprintf(stderr, "main: error inserting even number");
+                return (EXIT_FAILURE);
+            }
+            
+        }
+        print_status(f, mixList);
+        fprintf(f, "\n");
+
+    }
+    fclose(in);
+    orderedList=list_ini(&destroy_intp_function, &copy_intp_function,
+            &print_intp_function, &cmp_intp_function);
+    if(!orderedList){
+        list_destroy(mixList);
+        return (EXIT_FAILURE);
+    }
+    size=list_size(mixList);
+    for(i=0;i<(size/2);i++){
+        fprintf(f, "\nExtrayendo elemento desde el principio de la lista...\n");
+        element=list_extractFirst(mixList);
+        if(!element){
+            fprintf(f, "main: error extracting element");
+            list_destroy(mixList);
+            list_destroy(orderedList);
+            return (EXIT_FAILURE);
+        }
+        fprintf(f, "Elemento extraído: [%d]\n", *element);
+        print_status(f, mixList);
+        fprintf(f, "\nInsertando elemento de forma ordenada en lista...\n");
+        orderedList=list_insertInOrder(orderedList, element);
+        if(!orderedList){
+            fprintf(f, "main: error inserting element");
+            free(element);
+            list_destroy(mixList);
+            return (EXIT_FAILURE);
+        }
+        free(element);
+        print_status(f, orderedList);
+    }
+    while(!list_isEmpty(mixList)){
+        fprintf(f, "\nExtrayendo elemento desde el final de la lista...\n");
+        element=list_extractLast(mixList);
+        if(!element){
+            fprintf(f, "main: error extracting element");
+            list_destroy(mixList);
+            list_destroy(orderedList);
+            return (EXIT_FAILURE);
+        }
+        fprintf(f, "Elemento extraído: [%d]\n", *element);
+        print_status(f, mixList);
+        fprintf(f, "\nInsertando elemento de forma ordenada en lista...\n");
+        orderedList=list_insertInOrder(orderedList, element);
+        if(!orderedList){
+            fprintf(f, "main: error inserting element");
+            free(element);
+            list_destroy(mixList);
+            return (EXIT_FAILURE);
+        }
+        free(element);
+        print_status(f, orderedList);
+    }
+    
+    
+    list_destroy(mixList);
+    list_destroy(orderedList);
     return (EXIT_SUCCESS);
 }
 

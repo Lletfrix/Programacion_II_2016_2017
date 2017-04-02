@@ -234,16 +234,36 @@ void * list_extractLast(List* list) {
         fprintf(stderr, "list_extractLast: invalid arguments.\n");
         return NULL;
     }
-    nodeFirst = list -> node;
-    while (list->node->next->next) {
-        list->node = list->node->next;
+    if(list_isEmpty(list)){
+        fprintf(stderr, "list_extractLast: list already empty\n");
+        return NULL;
     }
-    eleAux = list->copy_element_function(list->node->next->data);
+    
+    if(!list->node->next){
+        eleAux = list->copy_element_function(list->node->data);
+        if (!eleAux) {
+            fprintf(stderr, "list_extractLast: error copying element.\n");
+            return NULL;
+        }
+        list->destroy_element_function(list->node->data);
+        free(list->node);
+        list->node=NULL;
+        return eleAux;
+    }
+    
+    nodeFirst = list -> node;
+    while (nodeFirst->next->next) {
+        nodeFirst = nodeFirst->next;
+    }
+    eleAux = list->copy_element_function(nodeFirst->next->data);
     if (!eleAux) {
         fprintf(stderr, "list_extractLast: error copying element.\n");
         return NULL;
     }
-    list->node = nodeFirst;
+    list->destroy_element_function(nodeFirst->next->data);
+    free(nodeFirst->next);
+    nodeFirst->next=NULL;
+    
     return eleAux;
 }
 
@@ -304,6 +324,10 @@ int list_print(FILE *fd, const List* list) {
     if (!fd || !list) {
         fprintf(stderr, "list_print: invalid arguments\n");
         return -1;
+    }
+    if(list_isEmpty(list)){
+        chars=fprintf(fd,"Lista vacía.\n");
+        return chars;
     }
     nodeFirst = list->node;
     while (nodeFirst->next) {
