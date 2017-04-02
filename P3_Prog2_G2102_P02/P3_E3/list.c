@@ -216,6 +216,10 @@ void * list_extractFirst(List* list) {
         fprintf(stderr, "list_extractFirst: invalid arguments\n");
         return NULL;
     }
+    if(list_isEmpty(list)){
+        fprintf(stderr, "list_extractFirst: list already empty\n");
+        return NULL;
+    }
     nodeAux = list->node;
     list->node = list->node->next;
     returnElement = list->copy_element_function(nodeAux->data);
