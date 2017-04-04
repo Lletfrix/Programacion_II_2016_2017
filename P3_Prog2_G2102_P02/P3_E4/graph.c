@@ -4,8 +4,9 @@
 #define NOT_BELONG -1
 
 struct _Graph {
-    Node *nodes[MAX_NODES];
-    int adjacency [MAX_NODES][MAX_NODES];
+    List * nodes; /* Lista de nodos */
+    List* out_connections; /* Lista de NodeConnections */
+    List* in_connections; /* Lista de NodeConnections */
     int num_nodes;
     int num_edges;
 };
