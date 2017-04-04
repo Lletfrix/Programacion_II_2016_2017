@@ -40,20 +40,7 @@ Graph * graph_ini() {
     return g;
 }
 
-void graph_destroy(Graph* g) {
-    int i;
 
-    if (!g) {
-        /* if g points to NULL, it does nothing  */
-        return;
-    }
-    list_destroy(g->in_connections);
-    list_destroy(g->out_connections);
-    list_destroy(g->nodes);
-    
-    /* free the memory allocated by the graph. */
-    free(g); 
-}
 
 int graph_getNnodes(const Graph * g) {
     if (!g) { 
@@ -64,28 +51,7 @@ int graph_getNnodes(const Graph * g) {
     return g->num_nodes; 
 }
 
-int* graph_getNodeIds(const Graph * g) {
-    int *temp;
-    int i;
-    if (!g) { 
-        /* if g point to NULL, return NULL */
-        return NULL;
-    }
 
-    temp = (int*) malloc(g->num_nodes * (sizeof (int)));
-
-    if (!temp) { 
-        /* if malloc fails return NULL.*/
-        return NULL;
-    }
-
-    for (i = 0; i < g->num_nodes; i++) { 
-        /* write into the array */
-        temp[i] = list_get(g->nodes, i);
-    }
-    /* return adress from the array's first element */
-    return temp; 
-}
 
 int graph_getNedges(const Graph * g) {
     if (!g) { 
@@ -100,41 +66,9 @@ int graph_getNedges(const Graph * g) {
  * in case an error ocurr, it will return -1, so this function will help with
  * nodes which doesn't belong to the graph as well */
 
-int find_node_index(const Graph * g, int nId1) {
-    int i;
-
-    if (!g) { 
-        /* if g point to NULL, return -1 */
-        return -1;
-    }
-
-    for (i = 0; i < g->num_nodes; i++) { 
-        /* Look for the index which node of id <nId1> has.*/
-        if (list_get(g->nodes, i) == nId1) { 
-            /* if there's a coincidence, returns the index */
-            return i;
-        }
-    }
-    /* if there's no coincidence return NOT_BELONG (= -1) */
-    return NOT_BELONG; 
-}
-
-Graph * graph_addNode(Graph * g, const Node* n) {
-    /* error detection */
-    if ((!g) || (!n) || (g->num_nodes == MAX_NODES)) { 
-        /* if g or n is NULL, either g is full, return NULL*/
-        return NULL; 
-    }
 
 
-    if (find_node_index(g, node_getId(n)) == NOT_BELONG) {
-        list_insertLast (g->nodes,g->nodes->copy_element_function(n));
-        g->num_nodes++;
-        /* if the node isn't in the graph, it is add to the graph
-         and the number of nodes increases in 1*/
-    }
-    return g;
-}
+
 
 Graph * graph_addEdge(Graph * g, const int nId1, const int nId2) {
     int index1, index2;
@@ -163,21 +97,7 @@ Graph * graph_addEdge(Graph * g, const int nId1, const int nId2) {
     return g;
 }
 
-Node * graph_getNode(const Graph * g, int nId) {
-    int index;
-    index = find_node_index(g, nId);
 
-    if (!g) { 
-        /* error detection */
-        return NULL;
-    }
-
-    if (index == NOT_BELONG) { 
-        /* if the node does not belong, return NULL*/
-        return NULL;
-    }
-    return list_get(g->nodes, index);
-}
 
 Bool graph_areConnected(const Graph * g, const int nId1, const int nId2) {
     int index1, index2;
