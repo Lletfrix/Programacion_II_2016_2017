@@ -1,4 +1,6 @@
 #include "graph.h"
+#include "functions.h"
+#include "list.h"
 #include <stdlib.h>
 
 #define NOT_BELONG -1
@@ -11,22 +13,24 @@ struct _Graph {
     int num_edges;
 };
 
+
 Graph * graph_ini() {
     Graph* g;
     int i, j;
     g = (Graph*) malloc(sizeof (Graph));
 
-    if (!g) { 
-        /*if malloc fails return NULL*/
+    if (!g) {
+        fprintf(stderr, "graph_ini: error allocating memory.\n");
         return NULL;
     }
 
-    for (i = 0; i < MAX_NODES; i++) {
-        for (j = 0; j < MAX_NODES; j++) {
-            g->adjacency[i][j] = 0; 
-            /* fill the adjacency matrix with 0s */
-        }
-    }
+    g->nodes=list_ini(&destroy_node_function,&copy_node_function,&print_node_function,&cmp_node_function);
+    g->out_connections=list_ini(&destroy_nodeConnections_function,&copy_nodeConnections_function,
+    &print_nodeConnections_function,&cmp_nodeConnections_function);
+    g->in_connections=list_ini(&destroy_nodeConnections_function,&copy_nodeConnections_function,
+    &print_nodeConnections_function,&cmp_nodeConnections_function);
+    
+    
     g->num_nodes = 0; 
     /* zero nodes and edges at the beginning*/
     g->num_edges = 0;
