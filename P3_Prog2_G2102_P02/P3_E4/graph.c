@@ -224,6 +224,7 @@ Graph * graph_addEdge(Graph * g, const int nId1, const int nId2) {
     nc_destroy(nc1);
     nc_destroy(nc2);
 
+    g->num_edges++;
     return g;
 }
 

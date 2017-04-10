@@ -70,46 +70,7 @@ int graph_getNedges(const Graph * g) {
 
 
 
-Graph * graph_addEdge(Graph * g, const int nId1, const int nId2) {
-    int index1, index2, i, lisTam, exist = 0;
-    NodeConnections* nc1, *nc2;
-    /* error detection */
-    if (!g) { 
-        return NULL;
-    }
 
-    index1 = find_node_index(g, nId1); 
-    index2 = find_node_index(g, nId2); 
-    
-
-    if ((index1 == NOT_BELONG) || (index2 == NOT_BELONG)) {
-        /* if any of the two nodes doesn't belong to the graph,
-         return NULL*/
-        return NULL; 
-    }
-    nc1 =  list_get(g->out_connections, index1);
-    nc2 =  list_get(g->in_connections, index2);
-    lisTam = list_size(nc1->connections);
-    for (i = 1; i<=lisTam; i++){
-        if (list_get(nc1->connections, i)==index2){
-            exist = 1;
-        }
-    }
-    if (exist = 1){
-        nc1->connections=list_insertFirst(nc1->connections, &index2);
-        if (!nc1->connections){
-            fprintf(stderr,"");
-            graph_destroy(g);
-        }
-        list_insertLast(nc2->connections, &index1);
-        if (!nc2->connections){
-            fprintf(stderr,"");
-            graph_destroy(g);
-        }
-    }
-    
-    return g;
-}
 
 
 

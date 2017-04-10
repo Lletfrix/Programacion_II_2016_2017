@@ -86,7 +86,7 @@ Graph * read_graph_from_file(char * filename) {
 }
 
 Queue* graph_path (Graph*g, int fromId, int toId ){
-    int i, *idList, *idAdj, nConnec;
+    int i, *idList, *idAdj, nConnec,fId;
     Queue* qAux, *qPath;
     Node* nodeU, *nodeV, *nodeAux;
     
@@ -152,10 +152,10 @@ Queue* graph_path (Graph*g, int fromId, int toId ){
     
     queue_destroy(qAux);
     nodeAux=graph_getNode(g, toId);
-    if (node_getColor(nodeAux)!=BLACK){
+    /*if (node_getColor(nodeAux)!=BLACK){
         node_destroy(nodeAux);
         return NULL;
-    }
+    }*/
     node_destroy(nodeAux);
     
     /* Backtracking */
@@ -167,17 +167,24 @@ Queue* graph_path (Graph*g, int fromId, int toId ){
     
     nodeU=graph_getNode(g, toId);
     qPath=queue_insert(qPath, nodeU);
-    
     if(!qPath){
+        node_destroy(nodeU);
         return NULL;
     }
     
-    while(node_getFatherId(nodeU)!=0){
-        nodeU=graph_getNode(g, node_getFatherId(nodeU));
-        qPath = queue_insert(qPath, nodeU);
+    
+    fId=node_getFatherId(nodeU);
+    node_destroy(nodeU);
+    
+    while(fId!=0){
+        nodeV=graph_getNode(g, fId);
+        fId=node_getFatherId(nodeV);
+        qPath = queue_insert(qPath, nodeV);
         if (!qPath) {
+            node_destroy(nodeV);
             return NULL;
         }
+        node_destroy(nodeV);
     }
     
     return qPath;
