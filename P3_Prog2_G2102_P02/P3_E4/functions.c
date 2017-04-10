@@ -13,7 +13,6 @@
 
 #include "functions.h"
 #include "list.h"
-#include "graph.h"
 /* Las siguientes funciones se usarán cuando se quieran guardar enteros en la pila. Ojo! Estas funciones
 reciben un puntero a entero, no una estructura con un puntero a entero (como en el ejercicio P2_E1) */
 
