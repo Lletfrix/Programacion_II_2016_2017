@@ -13,6 +13,11 @@ struct _Graph {
     int num_edges;
 };
 
+typedef struct _NodeConnections {
+    int nodeid;
+    List* connections; /* Lista de enteros */
+} NodeConnections;
+
 /* TODO: graph_addEgde, graph_areConnected, graph_getConnectionsTo/From, graph_print*/
 
 
@@ -129,9 +134,9 @@ Graph * graph_addNode(Graph * g, const Node* n) {
 
     if (find_node_index(g, node_getId(n)) == NOT_BELONG) {
         nodeAux=node_copy(n);
-        list_insertLast (g->nodes,nodeAux);
+        list_insertFirst (g->nodes,nodeAux);
         g->num_nodes++;
-        /* if the node isn't in the graph, it is add to the graph
+        /* if the node isn't in the graph, it is added to the graph
          and the number of nodes increases in 1*/
     }
     return g;
@@ -178,7 +183,8 @@ Node * graph_getNode(const Graph * g, int nId) {
 }
 
 Bool graph_areConnected(const Graph * g, const int nId1, const int nId2) {
-    int index1, index2;
+    int index1, index2, size, i;
+    NodeConnections* nc;
 
     index1 = find_node_index(g, nId1); 
     index2 = find_node_index(g, nId2);
@@ -192,12 +198,17 @@ Bool graph_areConnected(const Graph * g, const int nId1, const int nId2) {
         /*if nodes don't belong to the graph, return FALSE*/
         return FALSE;
     }
-
-    /*if (g->adjacency[index1][index2] == 0) { 
-        return FALSE;
-    }*/
-       /* else return TRUE */
-    return TRUE; 
+    
+    
+    nc=list_get(g->out_connections, index1);
+    size = list_size(nc->connections);
+    for(i=1;i<=size;i++){
+        if(index2==list_get(nc->connections, i)){
+            return TRUE;
+        }
+    }
+    
+    return FALSE;
 }
 
 int graph_getNumberOfConnectionsFrom(const Graph * g, const int fromId) {
@@ -214,7 +225,7 @@ int graph_getNumberOfConnectionsFrom(const Graph * g, const int fromId) {
     for (i = 0, connections = 0; i < g->num_nodes; i++) {
         
         /* changes destiny node in each iteration */
-        toId = node_getId(g->nodes[i]); /*SE ARREGLA DE MOMENTO*/
+        toId = node_getId(list_get(g->nodes, i)); /*SE ARREGLA DE MOMENTO*/
 
         if (graph_areConnected(g, fromId, toId) == TRUE) { 
             /* if they are conected sum 1 to the number of connections from node*/
@@ -244,7 +255,7 @@ int* graph_getConnectionsFrom(const Graph * g, const int fromId) {
     }
 
     for (i = 0, j = 0; i < g->num_nodes; i++) {
-        toId = node_getId(g->nodes[i]); 
+        toId = node_getId(list_get(g->nodes, i)); 
         /* change destiny node in each iteration */
         if (graph_areConnected(g, fromId, toId) == TRUE) { 
             temp[j] = toId; 
@@ -275,7 +286,7 @@ int graph_getNumberOfConnectionsTo(const Graph * g, const int toId) {
 
     for (i = 0, connections = 0; i < g->num_nodes; i++) {
 
-        fromId = node_getId(g->nodes[i]);
+        fromId = node_getId(list_get(g->nodes, i));
 
         if (graph_areConnected(g, fromId, toId) == TRUE) {
             connections++;
@@ -301,7 +312,7 @@ int* graph_getConnectionsTo(const Graph * g, const int toId) {
     }
 
     for (i = 0, j = 0; i < g->num_nodes; i++) {
-        fromId = node_getId(g->nodes[i]);
+        fromId = node_getId(list_get(g->nodes, i));
         if (graph_areConnected(g, fromId, toId) == TRUE) {
             temp[j] = fromId;
             j++;
@@ -327,14 +338,14 @@ int graph_print(FILE *pf, const Graph * g) {
     chars += fprintf(pf, "N=%d, E=%d :\n", nodeNumber, edgeNumber); 
 
     for (i = 0; i < nodeNumber; i++) {
-        /* prints node 'i'*/
-        chars += node_print(pf, g->nodes[i]); 
-        chars += fprintf(pf, "->");
-
-        for (j = 0; j < nodeNumber; j++) { 
-            /* prints the node's matrix adjacency row */
-            chars += fprintf(pf, " %d ", g->adjacency[i][j]);
-        }
+        /* prints list of nodes*/
+        chars += list_print(pf, g->nodes); 
+        
+        /* print list of out connections */
+        chars += list_print(pf, g->out_connections);
+        
+        /* print list of in connections */
+        chars += list_print(pf, g->in_connections);
 
         chars += fprintf(pf, "\n");
     }
