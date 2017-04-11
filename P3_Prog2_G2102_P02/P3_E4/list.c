@@ -292,10 +292,11 @@ const void* list_get(const List* list, int i){
         return NULL;
     }
     nodeAux = list->node;
-    for (count = 1; count <= i; count++){
+    for (count = 1; count < i; count++){
         nodeAux = nodeAux->next;
     }
-    eleAux = list->copy_element_function(nodeAux->data);
+    /*eleAux = list->copy_element_function(nodeAux->data);*/
+    eleAux=nodeAux->data;
     if (!eleAux){
         fprintf(stderr, "list_get: error copying element.\n");
         return NULL;

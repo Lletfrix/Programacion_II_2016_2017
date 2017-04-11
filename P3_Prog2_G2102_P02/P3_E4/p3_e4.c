@@ -201,6 +201,7 @@ int main(int argc, char** argv) {
         fprintf(fp, "Es posible encontrar un camino\n");
     } else {
         fprintf(fp, "No es posible encontrar un camino\n");
+        graph_destroy(g);
         return (EXIT_SUCCESS);
     }
     
