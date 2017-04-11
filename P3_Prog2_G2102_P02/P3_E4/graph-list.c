@@ -55,9 +55,9 @@ Graph * graph_ini() {
 
     g->nodes=list_ini(&destroy_node_function,&copy_node_function,&print_node_function,&cmp_node_function);
     g->out_connections=list_ini(&destroy_nodeConnections_function,&copy_nodeConnections_function,
-    &print_nodeConnections_function,&cmp_nodeConnections_function);
+    &print_nodeOutConnections_function,&cmp_nodeConnections_function);
     g->in_connections=list_ini(&destroy_nodeConnections_function,&copy_nodeConnections_function,
-    &print_nodeConnections_function,&cmp_nodeConnections_function);
+    &print_nodeInConnections_function,&cmp_nodeConnections_function);
     
     
     g->num_nodes = 0; 
@@ -381,18 +381,17 @@ int graph_print(FILE *pf, const Graph * g) {
     /* prints number of nodes and number of edges */
     chars += fprintf(pf, "N=%d, E=%d :\n", nodeNumber, edgeNumber); 
 
-    for (i = 0; i < nodeNumber; i++) {
         /* prints list of nodes*/
         chars += list_print(pf, g->nodes); 
+        chars += fprintf(pf, "\n");
         
         /* print list of out connections */
         chars += list_print(pf, g->out_connections);
         
-        /* print list of in connections */
+        /* print list of inconnections */
         chars += list_print(pf, g->in_connections);
-
+        
         chars += fprintf(pf, "\n");
-    }
     /* prints chars, which is the value of all characters that have been printed */
     return chars; 
 }

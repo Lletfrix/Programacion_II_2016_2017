@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/functions.o \
+	${OBJECTDIR}/list.o \
 	${OBJECTDIR}/node.o \
 	${OBJECTDIR}/p3_e1.o \
 	${OBJECTDIR}/queue.o
@@ -69,6 +70,11 @@ ${OBJECTDIR}/functions.o: functions.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/functions.o functions.c
+
+${OBJECTDIR}/list.o: list.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/list.o list.c
 
 ${OBJECTDIR}/node.o: node.c
 	${MKDIR} -p ${OBJECTDIR}

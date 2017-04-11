@@ -40,7 +40,9 @@ void destroy_nodeConnections_function(void*);
 
 void * copy_nodeConnections_function(const void*);
 
-int print_nodeConnections_function(FILE *, const void*);
+int print_nodeOutConnections_function(FILE *, const void*);
+
+int print_nodeInConnections_function(FILE *, const void*);
 
 int cmp_nodeConnections_function(const void*, const void*);
 

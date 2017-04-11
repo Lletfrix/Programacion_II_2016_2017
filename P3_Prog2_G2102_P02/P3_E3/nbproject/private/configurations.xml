@@ -26,8 +26,10 @@
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
           <runcommandpicklistitem>valgrind --leak-check=full "${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>valgrind --leak-check=full "${OUTPUT_PATH}" "g1.txt"</runcommandpicklistitem>
+          <runcommandpicklistitem>valgrind --leak-check=full "${OUTPUT_PATH}" "datos.txt"</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>valgrind --leak-check=full "${OUTPUT_PATH}"</runcommand>
+        <runcommand>valgrind --leak-check=full "${OUTPUT_PATH}" "datos.txt"</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>

@@ -103,12 +103,25 @@ void * copy_nodeConnections_function(const void* e) {
     return dst;
 }
 
-int print_nodeConnections_function(FILE * f, const void* e) {
+int print_nodeOutConnections_function(FILE * f, const void* e) {
     NodeConnections* eNode;
     int chars=0;
     if (f != NULL && e != NULL){
         eNode=(NodeConnections*)e;
-        chars+=fprintf(f, "node with id:[%d] is adjacent to:", eNode->nodeid);
+        chars+=fprintf(f, "node with id:[%d] is connected to:\n", eNode->nodeid);
+        chars+=list_print(f, eNode->connections);
+        return chars;
+    }
+        
+    return -1;
+}
+
+int print_nodeInConnections_function(FILE * f, const void* e) {
+    NodeConnections* eNode;
+    int chars=0;
+    if (f != NULL && e != NULL){
+        eNode=(NodeConnections*)e;
+        chars+=fprintf(f, "node with id:[%d] is connected from:\n", eNode->nodeid);
         chars+=list_print(f, eNode->connections);
         return chars;
     }

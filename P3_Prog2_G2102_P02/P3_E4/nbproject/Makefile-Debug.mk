@@ -36,7 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/functions.o \
-	${OBJECTDIR}/graph.o \
+	${OBJECTDIR}/graph-list.o \
 	${OBJECTDIR}/list.o \
 	${OBJECTDIR}/node.o \
 	${OBJECTDIR}/p3_e4.o \
@@ -72,10 +72,10 @@ ${OBJECTDIR}/functions.o: functions.c
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/functions.o functions.c
 
-${OBJECTDIR}/graph.o: graph.c
+${OBJECTDIR}/graph-list.o: graph-list.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graph.o graph.c
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graph-list.o graph-list.c
 
 ${OBJECTDIR}/list.o: list.c
 	${MKDIR} -p ${OBJECTDIR}

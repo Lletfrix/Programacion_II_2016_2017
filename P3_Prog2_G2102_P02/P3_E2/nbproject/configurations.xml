@@ -28,6 +28,10 @@
     <itemPath>functions.c</itemPath>
     <itemPath>functions.h</itemPath>
     <itemPath>g1.txt</itemPath>
+    <itemPath>graph.c</itemPath>
+    <itemPath>graph.h</itemPath>
+    <itemPath>list.c</itemPath>
+    <itemPath>list.h</itemPath>
     <itemPath>node.c</itemPath>
     <itemPath>node.h</itemPath>
     <itemPath>queue.c</itemPath>
@@ -49,6 +53,14 @@
       <item path="functions.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="g1.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graph.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="graph.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="list.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="list.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="node.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -88,6 +100,14 @@
       <item path="functions.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="g1.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graph.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="graph.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="list.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="list.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="node.c" ex="false" tool="0" flavor2="0">
       </item>

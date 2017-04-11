@@ -5,7 +5,6 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>functions.h</itemPath>
-      <itemPath>graph.h</itemPath>
       <itemPath>list.h</itemPath>
       <itemPath>node.h</itemPath>
       <itemPath>queue.h</itemPath>
@@ -14,13 +13,12 @@
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
-      <itemPath>g1.txt</itemPath>
+      <itemPath>datos.txt</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>functions.c</itemPath>
-      <itemPath>graph.c</itemPath>
       <itemPath>list.c</itemPath>
       <itemPath>node.c</itemPath>
       <itemPath>p3_e3.c</itemPath>
@@ -48,15 +46,11 @@
       </toolsSet>
       <compileType>
       </compileType>
+      <item path="datos.txt" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="functions.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="functions.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="g1.txt" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="graph.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="graph.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="list.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -95,15 +89,11 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="datos.txt" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="functions.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="functions.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="g1.txt" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="graph.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="graph.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="list.c" ex="false" tool="0" flavor2="0">
       </item>

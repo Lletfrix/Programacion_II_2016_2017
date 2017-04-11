@@ -12,6 +12,7 @@
  */
 
 #include "functions.h"
+#include "list.h"
 /* Las siguientes funciones se usarán cuando se quieran guardar enteros en la pila. Ojo! Estas funciones
 reciben un puntero a entero, no una estructura con un puntero a entero (como en el ejercicio P2_E1) */
 
@@ -66,4 +67,77 @@ int cmp_node_function(const void* e1, const void* e2){
         return 0;
     }
     return node_getId(e1)-node_getId(e2);
+}
+
+/* Las siguientes se usarán cuando se quieran guardar conexiones de nodos en la lista */
+
+typedef struct _NodeConnections {
+    int nodeid;
+    List* connections; /* Lista de enteros */
+} NodeConnections;
+
+void destroy_nodeConnections_function(void* e) {
+    if(!e){
+        fprintf(stderr, "Internal error");
+    }
+    NodeConnections* n;
+    n=(NodeConnections*)e;
+    list_destroy(n->connections);
+    free (n);
+}
+
+void * copy_nodeConnections_function(const void* e) {
+    NodeConnections * dst, *eNode;
+    int i, size;
+    if (e == NULL)
+        return NULL;
+    eNode=(NodeConnections*)e;
+    dst = (NodeConnections*) malloc(sizeof (NodeConnections));
+    dst->connections=list_ini(&destroy_intp_function,&copy_intp_function,&print_intp_function,&cmp_intp_function);
+    size=list_size(eNode->connections);
+    /*Copiamos el elemento*/
+    dst->nodeid = eNode->nodeid;
+    for(i=size;i>1;i--){
+        list_insertFirst(dst->connections, list_get(eNode->connections, i));
+    }
+    return dst;
+}
+
+int print_nodeOutConnections_function(FILE * f, const void* e) {
+    NodeConnections* eNode;
+    int chars=0;
+    if (f != NULL && e != NULL){
+        eNode=(NodeConnections*)e;
+        chars+=fprintf(f, "node with id:[%d] is connected to:\n", eNode->nodeid);
+        chars+=list_print(f, eNode->connections);
+        return chars;
+    }
+        
+    return -1;
+}
+
+int print_nodeInConnections_function(FILE * f, const void* e) {
+    NodeConnections* eNode;
+    int chars=0;
+    if (f != NULL && e != NULL){
+        eNode=(NodeConnections*)e;
+        chars+=fprintf(f, "node with id:[%d] is connected from:\n", eNode->nodeid);
+        chars+=list_print(f, eNode->connections);
+        return chars;
+    }
+        
+    return -1;
+}
+
+int cmp_nodeConnections_function(const void* e1, const void* e2){
+    int retorno;
+    NodeConnections* ne1, *ne2;
+    if (!e1 || !e2){
+        fprintf(stderr,"cpm_intp_function: invalid arguments");
+        return 0;
+    }
+    ne1=(NodeConnections*)e1;
+    ne2=(NodeConnections*)e2;
+    retorno=ne1->nodeid - ne2->nodeid;
+    return retorno;
 }
