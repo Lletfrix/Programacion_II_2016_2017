@@ -67,8 +67,6 @@ Graph * graph_ini() {
 }
 
 void graph_destroy(Graph* g) {
-    int i;
-
     if (!g) {
         /* if g points to NULL, it does nothing  */
         return;
@@ -108,9 +106,9 @@ int* graph_getNodeIds(const Graph * g) {
 
     for (i = 0; i < g->num_nodes; i++) { 
         /* write into the array */
-        nodeAux=list_get(g->nodes, i);
-        temp[i] = node_getId(nodeAux);
-        node_destroy(nodeAux);
+
+        temp[i] = node_getId(list_get(g->nodes, i+1));
+
     }
     /* return adress from the array's first element */
     return temp; 
@@ -138,7 +136,7 @@ int find_node_index(const Graph * g, int nId1) {
         return -1;
     }
 
-    for (i = 0; i < g->num_nodes; i++) { 
+    for (i = 1; i <= g->num_nodes; i++) { 
         /* Look for the index which node of id <nId1> has.*/
         n=list_get(g->nodes, i);
         if (node_getId(n) == nId1) { 
@@ -203,7 +201,7 @@ Graph * graph_addEdge(Graph * g, const int nId1, const int nId2) {
         }
     }
     if (exist == 0){
-        nc1->connections=list_insertFirst(nc1->connections, &index2);
+        nc1->connections=list_insertFirst(nc1->connections, &nId2);
         if (!nc1->connections){
             fprintf(stderr,"graph_addEdge: error");
             graph_destroy(g);
@@ -211,7 +209,7 @@ Graph * graph_addEdge(Graph * g, const int nId1, const int nId2) {
             nc_destroy(nc2);
             return NULL;
         }
-        list_insertLast(nc2->connections, &index1);
+        list_insertFirst(nc2->connections, &nId1);
         if (!nc2->connections){
             fprintf(stderr,"graph_addEdge: error");
             graph_destroy(g);
@@ -220,10 +218,6 @@ Graph * graph_addEdge(Graph * g, const int nId1, const int nId2) {
             return NULL;
         }
     }
-
-    nc_destroy(nc1);
-    nc_destroy(nc2);
-
     g->num_edges++;
     return g;
 }
@@ -247,7 +241,7 @@ Node * graph_getNode(const Graph * g, int nId) {
 }
 
 Bool graph_areConnected(const Graph * g, const int nId1, const int nId2) {
-    int index1, index2, size, i;
+    int index1, index2, size, i, cmp;
     NodeConnections* nc;
 
     index1 = find_node_index(g, nId1); 
@@ -267,8 +261,8 @@ Bool graph_areConnected(const Graph * g, const int nId1, const int nId2) {
     nc=list_get(g->out_connections, index1);
     size = list_size(nc->connections);
     for(i=1;i<=size;i++){
-        if(index2==list_get(nc->connections, i)){
-            nc_destroy(nc);
+        cmp = *((int*)list_get(nc->connections, i));
+        if(nId2==cmp){
             return TRUE;
         }
     }
@@ -291,9 +285,8 @@ int graph_getNumberOfConnectionsFrom(const Graph * g, const int fromId) {
     for (i = 0, connections = 0; i < g->num_nodes; i++) {
         
         /* changes destiny node in each iteration */
-        nodeAux=list_get(g->nodes, i);
-        toId = node_getId(nodeAux);
-        node_destroy(nodeAux);
+
+        toId = node_getId(list_get(g->nodes, i+1)); /*SE ARREGLA DE MOMENTO*/
 
         if (graph_areConnected(g, fromId, toId) == TRUE) { 
             /* if they are conected sum 1 to the number of connections from node*/
@@ -324,9 +317,9 @@ int* graph_getConnectionsFrom(const Graph * g, const int fromId) {
     }
 
     for (i = 0, j = 0; i < g->num_nodes; i++) {
-        nodeAux=(list_get(g->nodes,i));
-        toId = node_getId(nodeAux);
-        node_destroy(nodeAux);
+
+        toId = node_getId(list_get(g->nodes, i+1)); 
+
         /* change destiny node in each iteration */
         if (graph_areConnected(g, fromId, toId) == TRUE) { 
             temp[j] = toId; 
