@@ -86,9 +86,9 @@ Graph * read_graph_from_file(char * filename) {
 }
 
 Queue* graph_path (Graph*g, int fromId, int toId ){
-    int i, *idList, *idAdj, nConnec,fId;
+    int i, *idList, *idAdj, nConnec;
     Queue* qAux, *qPath;
-    Node* nodeU, *nodeV, *nodeAux;
+    Node* nodeU, *nodeV;
     
     if(!g || fromId==-1 || toId==-1){
         return NULL;
@@ -102,7 +102,6 @@ Queue* graph_path (Graph*g, int fromId, int toId ){
         nodeU=graph_getNode(g,idList[i]);
         node_setColor(nodeU,WHITE);
         node_setFatherId(nodeU,0);
-        node_destroy(nodeU);
     }
     free(idList);
     
@@ -119,8 +118,6 @@ Queue* graph_path (Graph*g, int fromId, int toId ){
         fprintf(stderr, "graph_path: error adding first node to queue.\n");
         return NULL;
     }
-    
-    node_destroy(nodeU);
     
     while(!queue_isEmpty(qAux)){
         nodeU=queue_extract(qAux);
@@ -143,20 +140,16 @@ Queue* graph_path (Graph*g, int fromId, int toId ){
             }
         }
         node_setColor(nodeU,BLACK);
-        nodeAux=graph_getNode(g, node_getId(nodeU));
-        node_setColor(nodeAux, BLACK);
-        node_destroy(nodeAux);
+        node_setColor(graph_getNode(g, node_getId(nodeU)), BLACK);
         free(idAdj);
         node_destroy(nodeU);
     }
     
     queue_destroy(qAux);
-    nodeAux=graph_getNode(g, toId);
-    /*if (node_getColor(nodeAux)!=BLACK){
-        node_destroy(nodeAux);
+    
+    if (node_getColor(graph_getNode(g, toId))!=BLACK){
         return NULL;
-    }*/
-    node_destroy(nodeAux);
+    }
     
     /* Backtracking */
     qPath=queue_ini(&destroy_node_function,&copy_node_function,&print_node_function);
@@ -167,24 +160,17 @@ Queue* graph_path (Graph*g, int fromId, int toId ){
     
     nodeU=graph_getNode(g, toId);
     qPath=queue_insert(qPath, nodeU);
+    
     if(!qPath){
-        node_destroy(nodeU);
         return NULL;
     }
     
-    
-    fId=node_getFatherId(nodeU);
-    node_destroy(nodeU);
-    
-    while(fId!=0){
-        nodeV=graph_getNode(g, fId);
-        fId=node_getFatherId(nodeV);
-        qPath = queue_insert(qPath, nodeV);
+    while(node_getFatherId(nodeU)!=0){
+        nodeU=graph_getNode(g, node_getFatherId(nodeU));
+        qPath = queue_insert(qPath, nodeU);
         if (!qPath) {
-            node_destroy(nodeV);
             return NULL;
         }
-        node_destroy(nodeV);
     }
     
     return qPath;
@@ -224,4 +210,3 @@ int main(int argc, char** argv) {
     graph_destroy(g);
     return (EXIT_SUCCESS);
 }
-
