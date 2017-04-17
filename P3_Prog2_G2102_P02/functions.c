@@ -77,10 +77,10 @@ typedef struct _NodeConnections {
 } NodeConnections;
 
 void destroy_nodeConnections_function(void* e) {
+    NodeConnections* n;
     if(!e){
         fprintf(stderr, "Internal error");
     }
-    NodeConnections* n;
     n=(NodeConnections*)e;
     list_destroy(n->connections);
     free (n);

@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   graph_test.c
  * Author: Profesores de PROG2
  */
@@ -80,7 +80,7 @@ int format_graph(FILE * file, const Graph * g, int (*node_print_function)(FILE *
 	Node* node;
 	int* ids;
 	int* conn;
-	
+
 	/* For each node: */
 	n = graph_getNnodes(g);
 	ids = graph_getNodeIds(g);
@@ -146,9 +146,6 @@ int format_graph(FILE * file, const Graph * g, int (*node_print_function)(FILE *
 	return c;
 }
 
-/*
- * 
- */
 int main(int argc, char** argv) {
 
 	Graph * g = NULL;
@@ -156,9 +153,9 @@ int main(int argc, char** argv) {
 		fprintf(stdout, "Not enough parameters: %d\n", argc);
 		return -1;
 	}
-	
+
 	g = read_graph_from_file(argv[1]);
-	
+
 	graph_print(stdout, g);
 	format_graph(stdout, g, &node_print);
 
