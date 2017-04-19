@@ -22,9 +22,9 @@ Tree* tree_ini(destroy_elementtree_function_type f1,
         print_elementtree_function_type f3,
         cmp_elementtree_function_type f4);
 /* Libera el árbol y todos sus elementos */
-void tree_destroy(Tree* pa);
+void tree_destroy(Tree* );
 /* Inserta en el árbol pa una copia del puntero po, devolviendo ERROR si el elemento ya existía en el árbol */
-Status tree_insert(Tree* pa, const void* po);
+Status tree_insert(Tree* , const void* );
 /* Devuelve TRUE si se puede encontrar po en el árbol pa */
 Bool tree_find(Tree* pa, const void* po);
 /* Comprueba si un árbol está vacío */
