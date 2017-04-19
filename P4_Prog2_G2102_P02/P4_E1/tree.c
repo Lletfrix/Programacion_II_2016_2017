@@ -71,10 +71,10 @@ Status nodeBT_insert_recursive(NodeBT* n, cmp_elementtree_function_type pf1, voi
     }
     value = pf1(n->info, pElem);
     if(value==0){
-        fprintf(stderr, "nodeBT_insert_recursive: element already exists.\n");
+        /*fprintf(stderr, "nodeBT_insert_recursive: element already exists.\n");*/
         return ERROR;
     }
-    if (value < 0) {
+    if (value > 0) {
         if (!n->left) {
             n->left=nodeBT_ini();
             if(!n->left){
@@ -86,7 +86,7 @@ Status nodeBT_insert_recursive(NodeBT* n, cmp_elementtree_function_type pf1, voi
         }
         nodeBT_insert_recursive(n->left, pf1, pElem);
     }
-    if (value > 0){
+    if (value < 0){
         if (!n->right) {
             n->right=nodeBT_ini();
             if(!n->right){
@@ -97,6 +97,49 @@ Status nodeBT_insert_recursive(NodeBT* n, cmp_elementtree_function_type pf1, voi
             return OK;
         }
         nodeBT_insert_recursive(n->right, pf1, pElem);
+    }
+}
+
+
+int nodeBT_depth_recursive(NodeBT *n){
+    int depthLeft, depthRight;
+    if (!n){
+        return 0;
+    }
+    depthLeft = nodeBT_depth_recursive(n->left);
+    depthRight = nodeBT_depth_recursive(n->right);
+    if (depthLeft > depthRight){
+        return depthLeft + 1;
+    }
+    return depthRight + 1;
+}
+
+
+int nodeBT_numNodes_recursive(NodeBT* n){
+    int res;
+    if(!n){
+        return 0;
+    }
+    res = nodeBT_numNodes_recursive(n->left) + nodeBT_numNodes_recursive(n->right) + 1;
+    return res;
+}
+
+Bool nodeBT_find_recursive (NodeBT* n, const void* pElem, cmp_elementtree_function_type f){
+    int value;
+    if (!n || !pElem || !f){
+        /*fprintf(stderr, "nodeBT_find_recursive: invalid arguments.\n");*/
+        return FALSE;
+    }
+    value=f(n->info,pElem);
+    
+    if (value==0){
+        return TRUE;
+    }
+    if (value < 0){
+        nodeBT_find_recursive(n->right,pElem,f);
+    }
+    if (value > 0){
+        nodeBT_find_recursive(n->left,pElem,f);
     }
 }
 /*******************************************************************************/
@@ -168,5 +211,54 @@ Status tree_insert(Tree* t , const void* pElem){
     return OK;
 }
 
+Bool tree_isEmpty( const Tree* pa){
+    if (!pa){
+        fprintf(stderr, "Invalid arguments in tree_isEmpty");
+        return TRUE;
+    }
+    if(!pa->root){
+        return TRUE;
+    }
+    return FALSE;
+}
 
 
+int tree_depth(const Tree* pa) {
+    int depth;
+    if (!pa) {
+        fprintf(stderr, "Invalid arguments in tree_depth");
+        return -1;
+    }
+    if (!pa->root) {
+        return 0;
+    }
+    depth = nodeBT_depth_recursive(pa->root);
+    return depth;
+}
+
+int tree_numNodes(const Tree* pa){
+    int res = 0;
+    if (!pa){
+        fprintf(stderr,"Invalid arguments in tree_numNodes\n");
+        return -1;
+    }
+    if (pa->root==NULL){
+        return 0;
+    }
+    res = nodeBT_numNodes_recursive(pa->root);
+    return res;
+}
+
+Bool tree_find(Tree* t, const void* pElem){
+    if (!t || !pElem){
+        fprintf(stderr,"tree_find: invalid arguments.\n");
+        return FALSE;
+    }
+    if (tree_isEmpty(t)){
+        return FALSE;
+    }
+    if(t->cmp_element_function(t->root->info, pElem)==0){
+        return TRUE;
+    }
+    return nodeBT_find_recursive(t->root, pElem, t->cmp_element_function);
+}

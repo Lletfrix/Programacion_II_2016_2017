@@ -28,7 +28,7 @@ Bool tree_find(Tree* pa, const void* po);
 Bool tree_isEmpty( const Tree* pa){
     if (!pa){
         fprintf(stderr, "Invalid arguments in tree_isEmpty");
-        return ERROR;
+        return TRUE;
     }
     if(!pa->root){
         return TRUE;
@@ -36,13 +36,13 @@ Bool tree_isEmpty( const Tree* pa){
     return FALSE;
 }
 /* Devuelve la profundidad del árbol pa, considerando que un árbol vacío tiene profundidad -1 */
-int nodeBT_depth(NodeBT *n){
+int nodeBT_depth_recursive(NodeBT *n){
     int depthLeft, depthRight;
     if (!n){
         return 0;
     }
-    depthLeft = nodeBT_depth(n->left);
-    depthRight = nodeBT_depth(n->right);
+    depthLeft = nodeBT_depth_recursive(n->left);
+    depthRight = nodeBT_depth_recursive(n->right);
     if (depthLeft > depthRight){
         return depthLeft + 1;
     }
@@ -58,16 +58,16 @@ int tree_depth(const Tree* pa) {
     if (!pa->root) {
         return 0;
     }
-    depth = nodeBT_depth(pa->root);
+    depth = nodeBT_depth_recursive(pa->root);
     return depth;
 }
 /* Devuelve el número de nodos del árbol pa, considerando que un árbol vacío tiene 0 nodos */
-int nodeBT_numNodes(NodeBT* n){
+int nodeBT_numNodes_recursive(NodeBT* n){
     if(!n){
         return 0;
     }
     int res;
-    res = nodeBT_numNodes(n->left) + nodeBT_numNodes(n->right) + 1;
+    res = nodeBT_numNodes_recursive(n->left) + nodeBT_numNodes_recursive(n->right) + 1;
     return res;
 }
 int tree_numNodes(const Tree* pa){
@@ -79,7 +79,7 @@ int tree_numNodes(const Tree* pa){
     if (pa->root==NULL){
         return 0;
     }
-    res = nodeBT_numNodes(pa->root);
+    res = nodeBT_numNodes_recursive(pa->root);
     return res;
 }
 /******* Funciones de recorrido del árbol (P4_E3) ********/

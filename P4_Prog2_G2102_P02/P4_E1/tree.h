@@ -26,13 +26,13 @@ void tree_destroy(Tree* );
 /* Inserta en el árbol pa una copia del puntero po, devolviendo ERROR si el elemento ya existía en el árbol */
 Status tree_insert(Tree* , const void* );
 /* Devuelve TRUE si se puede encontrar po en el árbol pa */
-Bool tree_find(Tree* pa, const void* po);
+Bool tree_find(Tree* , const void* );
 /* Comprueba si un árbol está vacío */
-Bool tree_isEmpty(const Tree* pa);
+Bool tree_isEmpty(const Tree* );
 /* Devuelve la profundidad del árbol pa, considerando que un árbol vacío tiene profundidad -1 */
-int tree_depth(const Tree* pa);
+int tree_depth(const Tree* );
 /* Devuelve el número de nodos del árbol pa, considerando que un árbol vacío tiene 0 nodos */
-int tree_numNodes(const Tree* pa);
+int tree_numNodes(const Tree* );
 /******* Funciones de recorrido del árbol (P4_E3) ********/
 /* Muestra el recorrido de un árbol en orden previo */
 Status tree_preOrder(FILE* f, const Tree* pa);
