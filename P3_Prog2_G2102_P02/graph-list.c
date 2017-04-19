@@ -40,8 +40,6 @@ void nc_destroy(NodeConnections *nc){
     list_destroy(nc->connections);
     free(nc);
 }
-/* TODO: graph_addEgde, graph_areConnected, graph_getConnectionsTo/From, graph_print*/
-
 
 Graph * graph_ini() {
     Graph* g;
