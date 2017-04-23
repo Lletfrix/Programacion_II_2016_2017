@@ -39,12 +39,11 @@ OBJECTFILES= \
 	${OBJECTDIR}/list.o \
 	${OBJECTDIR}/node.o \
 	${OBJECTDIR}/p4_e1.o \
-	${OBJECTDIR}/tree.o \
-	${OBJECTDIR}/tree_aux.o
+	${OBJECTDIR}/tree.o
 
 
 # C Compiler Flags
-CFLAGS=
+CFLAGS=-ansi -pedantic -g -Wall
 
 # CC Compiler Flags
 CCFLAGS=
@@ -67,35 +66,30 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/p4_e1: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/p4_e1 ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/functions.o: functions.c 
+${OBJECTDIR}/functions.o: functions.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/functions.o functions.c
 
-${OBJECTDIR}/list.o: list.c 
+${OBJECTDIR}/list.o: list.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/list.o list.c
 
-${OBJECTDIR}/node.o: node.c 
+${OBJECTDIR}/node.o: node.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/node.o node.c
 
-${OBJECTDIR}/p4_e1.o: p4_e1.c 
+${OBJECTDIR}/p4_e1.o: p4_e1.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/p4_e1.o p4_e1.c
 
-${OBJECTDIR}/tree.o: tree.c 
+${OBJECTDIR}/tree.o: tree.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/tree.o tree.c
-
-${OBJECTDIR}/tree_aux.o: tree_aux.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/tree_aux.o tree_aux.c
 
 # Subprojects
 .build-subprojects:
@@ -103,7 +97,6 @@ ${OBJECTDIR}/tree_aux.o: tree_aux.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/p4_e1
 
 # Subprojects
 .clean-subprojects:
